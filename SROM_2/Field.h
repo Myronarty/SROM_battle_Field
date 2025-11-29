@@ -31,6 +31,8 @@ public:
 	int ord();
 	Field pov(const Field& B) const;
 	Field pov2() const;
+	int Tr() const;
+	Field rev() const;
 };
 
 /*struct D_Field

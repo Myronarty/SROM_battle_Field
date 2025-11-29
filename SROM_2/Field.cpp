@@ -239,6 +239,45 @@ Field Field::pov2() const
 Field Field::pov(const Field& B) const
 {
     Field C;
+    C.A[0] = 1;
+    for (int j = 34; j > -1; j--)
+    {
+        C = C.pov2();
+        if ((B.A[2] & (uint64_t(1) << j)) != 0)
+        {
+            C = C * *this;
+        }
+    }
+    for (int i = 1; i > -1; i--)
+    {
+        for (int j = 63; j > -1; j--)
+        {
+            C = C.pov2();
+            if ((B.A[i] & (uint64_t(1) << j)) != 0)
+            {
+                C = C * *this;
+            }
+        }
+    }
 
     return C;
+}
+
+int Field::Tr() const
+{
+    Field A = *this;
+    Field C = *this;
+    Field Q;
+    Q.A[0] = 163;
+    for (int i = 1; i < 163; i++)
+    {
+        A = A.pov2();
+        C = C + A;
+    }
+    return C.A[0];
+}
+
+Field Field::rev() const
+{
+    return this->pov(Field("1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111110"));
 }
