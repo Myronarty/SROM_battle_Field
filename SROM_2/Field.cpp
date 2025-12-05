@@ -141,62 +141,6 @@ void Field::ShowBin() const
     }
     cout << endl;
 }
-//doesnt need
-int Field::ord()
-{
-    uint64_t n = 0;
-    int k;
-    if(this->A[2] != 0)
-    {
-        n = this->A[2];
-        k = 2;
-    }
-    else if (this->A[1] != 0)
-    {
-        n = this->A[1];
-        k = 1;
-    }
-    else if (this->A[0] != 0)
-    {
-        n = this->A[0];
-        k = 0;
-    }
-    if (n == 0) return -1;
-
-    int pos = 0;
-
-    if (n > 0xFFFFFFFFULL)
-    {
-        n >>= 32; pos += 32;
-    }
-
-    if (n > 0xFFFFULL)
-    {
-        n >>= 16; pos += 16;
-    }
-
-    if (n > 0xFFULL)
-    {
-        n >>= 8; pos += 8;
-    }
-
-    if (n > 0xFULL)
-    {
-        n >>= 4; pos += 4;
-    }
-
-    if (n > 0x3ULL)
-    {
-        n >>= 2; pos += 2;
-    }
-
-    if (n > 0x1ULL)
-    {
-        pos += 1;
-    }
-
-    return pos;
-}
 //for showbit
 int Field::High() const
 {
@@ -280,4 +224,60 @@ int Field::Tr() const
 Field Field::rev() const
 {
     return this->pov(Field("1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111110"));
+}
+//doesnt need
+int Field::ord()
+{
+    uint64_t n = 0;
+    int k;
+    if (this->A[2] != 0)
+    {
+        n = this->A[2];
+        k = 2;
+    }
+    else if (this->A[1] != 0)
+    {
+        n = this->A[1];
+        k = 1;
+    }
+    else if (this->A[0] != 0)
+    {
+        n = this->A[0];
+        k = 0;
+    }
+    if (n == 0) return -1;
+
+    int pos = 0;
+
+    if (n > 0xFFFFFFFFULL)
+    {
+        n >>= 32; pos += 32;
+    }
+
+    if (n > 0xFFFFULL)
+    {
+        n >>= 16; pos += 16;
+    }
+
+    if (n > 0xFFULL)
+    {
+        n >>= 8; pos += 8;
+    }
+
+    if (n > 0xFULL)
+    {
+        n >>= 4; pos += 4;
+    }
+
+    if (n > 0x3ULL)
+    {
+        n >>= 2; pos += 2;
+    }
+
+    if (n > 0x1ULL)
+    {
+        pos += 1;
+    }
+
+    return pos;
 }
