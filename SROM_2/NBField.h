@@ -30,5 +30,6 @@ public:
 	void ShowBin() const;
 	int High() const;
 	int Tr() const;
+	bool mult_v(int i, const uint64_t u[2], const uint64_t v[2]) const;
 };
 
