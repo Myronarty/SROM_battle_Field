@@ -21,15 +21,15 @@ public:
 	NBField operator+(const NBField& B) const;
 	NBField operator*(const NBField& B) const;
 	NBField& operator=(const NBField& B);
-	int* zsuvL(int i);
-	int* zsuvR(int i);
 	NBField(const NBField&);
 	NBField(NBField&&);
 	NBField pov2() const;
+	NBField pov2_i(int i) const;
 	bool BinSyntax(string n);
 	void ShowBin() const;
 	int High() const;
 	int Tr() const;
 	bool mult_v(int i, const uint64_t u[2], const uint64_t v[2]) const;
+	NBField rev() const;
 };
 

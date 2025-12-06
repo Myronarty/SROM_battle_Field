@@ -51,30 +51,6 @@ NBField::NBField(NBField&&) = default;
 
 NBField& NBField:: operator=(const NBField& B) = default;
 
-int* NBField::zsuvL(int i)
-{
-    int v[2] = { 0 };
-
-    if (i < 64)
-    {
-        v[0] = (this->A[0] << i) | (this->A[1] >> (49-i));
-        v[1] = (this->A[1] << i) | (this->A[0] >> (64 - i));
-    }
-    else if (i < 113)
-    {
-        v[1] = (this->A[0] << (64 - i));
-    }
-
-    return v;
-}
-
-int* NBField::zsuvR(int i)
-{
-    int v[113] = { 0 };
-
-    return v;
-}
-
 bool NBField::mult_v(int i, const uint64_t u[2], const uint64_t v[2]) const //???
 {
     //mult L * v^T
@@ -202,4 +178,35 @@ int NBField::Tr() const
         }
     }
     return t & 1;
+}
+
+NBField NBField::pov2_i(int i) const
+{
+    NBField C = *this;
+
+    for (int j = 0; j < i; j++)
+    {
+        C = C.pov2();
+    }
+
+    return C;
+}
+
+NBField NBField::rev() const
+{
+    NBField B = *this;
+    int k = 1;
+    for (int i = 5; i > -1; i--)
+    {
+        B = B.pov2_i(k) * B;
+        k = 2 * k;
+        if ((i == 5) || (i == 4))
+        {
+            B = B.pov2() * *this;
+            k++;
+        }
+    }
+    B = B.pov2();
+
+    return B;
 }
