@@ -24,6 +24,7 @@ public:
 	NBField(const NBField&);
 	NBField(NBField&&);
 	NBField pov2() const;
+	NBField pov(const NBField& B) const;
 	NBField pov2_i(int i) const;
 	bool BinSyntax(string n);
 	void ShowBin() const;

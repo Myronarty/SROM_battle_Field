@@ -210,3 +210,21 @@ NBField NBField::rev() const
 
     return B;
 }
+
+NBField NBField::pov(const NBField& B) const
+{
+    NBField C;
+    C.A[0] = ~uint64_t(0);
+    C.A[1] = (uint64_t(1) << 49) - 1;
+
+    for (int i = 112; i > -1; i--)
+    {
+        C = C.pov2();
+        if ((B.A[i / 64] & (uint64_t(1) << (i % 64))) != 0)
+        {
+            C = C * *this;
+        }
+    }
+
+    return C;
+}
