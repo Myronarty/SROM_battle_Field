@@ -110,8 +110,8 @@ NBField NBField::operator*(const NBField& B) const
 NBField NBField::pov2() const
 {
     NBField C;
-    C.A[0] = (this->A[0] << 1) | ((this->A[1] >> 48) & 1);
-    C.A[1] = ((this->A[0] >> 63) | (this->A[1] << 1)) & 0x1FFFFFFFFFFFFULL;
+    C.A[0] = (this->A[0] >> 1) | (this->A[1] << 63);
+    C.A[1] = ((this->A[0] << 48) | (this->A[1] >> 1)) & 0x1FFFFFFFFFFFFULL;
     return C;
 }
 //good

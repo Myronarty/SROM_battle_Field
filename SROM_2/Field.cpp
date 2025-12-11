@@ -142,7 +142,7 @@ Field Field::pov2() const
         }
         A.Shift1();
         A.Shift1();
-        A.ShowBin();
+        //A.ShowBin();
     }
     return C;
 }
