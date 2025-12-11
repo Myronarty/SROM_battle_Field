@@ -25,8 +25,6 @@ public:
 	bool BinSyntax(string n);
 	int High() const;
 	void ShowBin() const;
-	//void Mod();
-	int ord();
 	Field pov(const Field& B) const;
 	Field pov2() const;
 	int Tr() const;

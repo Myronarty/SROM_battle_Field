@@ -48,35 +48,14 @@ Field::Field(const Field&) = default;
 Field::Field(Field&&) = default;
 
 Field& Field:: operator=(const Field& B) = default;
-
-/*void Field::Mod()
-{
-    while ((this->A[2] & 18446744039349813248) != 0)
-    {
-        int i = this->ord() - 163;
-        this->A[0] ^= uint64_t(201) << (64-i);
-        this->A[2] ^= (uint64_t(1) << 35) << (64-i);
-    }
-}*/
 //good
 Field Field::operator*(const Field& B) const
 {
     Field C;
     Field A = *this;
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 163; i++)
     {
-        for (int j = 0; j < 64; j++)
-        {
-            if ((B.A[i] & (uint64_t(1) << j)) != 0)
-            {
-                C = C + A;
-            }
-            A.Shift1();
-        }
-    }
-    for (int j = 0; j < 35; j++)
-    {
-        if ((B.A[2] & (uint64_t(1) << j)) != 0)
+        if ((B.A[i/64] & (uint64_t(1) << (i%64))) != 0)
         {
             C = C + A;
         }
@@ -87,7 +66,6 @@ Field Field::operator*(const Field& B) const
 //good
 void Field::Shift1()
 {
-    Field C;
     this->A[2] = (this->A[2] << 1) | (this->A[1] >> 63);
     this->A[1] = (this->A[1] << 1) | (this->A[0] >> 63);
     this->A[0] = this->A[0] << 1;
@@ -156,26 +134,15 @@ Field Field::pov2() const
     Field C;
     Field A;
     A.A[0] = 1;
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 163; i++)
     {
-        for (int j = 0; j < 64; j++)
-        {
-            if ((this->A[i] & (uint64_t(1) << j)) != 0)
-            {
-                C = C + A;
-            }
-            A.Shift1();
-            A.Shift1();
-        }
-    }
-    for (int j = 0; j < 35; j++)
-    {
-        if ((this->A[2] & (uint64_t(1) << j)) != 0)
+        if ((this->A[i/64] & (uint64_t(1) << (i%64))) != 0)
         {
             C = C + A;
         }
         A.Shift1();
         A.Shift1();
+        A.ShowBin();
     }
     return C;
 }
@@ -184,23 +151,13 @@ Field Field::pov(const Field& B) const
 {
     Field C;
     C.A[0] = 1;
-    for (int j = 34; j > -1; j--)
+
+    for (int i = 162; i > -1; i--)
     {
         C = C.pov2();
-        if ((B.A[2] & (uint64_t(1) << j)) != 0)
+        if ((B.A[i/64] & (uint64_t(1) << (i%64))) != 0)
         {
             C = C * *this;
-        }
-    }
-    for (int i = 1; i > -1; i--)
-    {
-        for (int j = 63; j > -1; j--)
-        {
-            C = C.pov2();
-            if ((B.A[i] & (uint64_t(1) << j)) != 0)
-            {
-                C = C * *this;
-            }
         }
     }
 
@@ -224,60 +181,4 @@ int Field::Tr() const
 Field Field::rev() const
 {
     return this->pov(Field("1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111110"));
-}
-//doesnt need
-int Field::ord()
-{
-    uint64_t n = 0;
-    int k;
-    if (this->A[2] != 0)
-    {
-        n = this->A[2];
-        k = 2;
-    }
-    else if (this->A[1] != 0)
-    {
-        n = this->A[1];
-        k = 1;
-    }
-    else if (this->A[0] != 0)
-    {
-        n = this->A[0];
-        k = 0;
-    }
-    if (n == 0) return -1;
-
-    int pos = 0;
-
-    if (n > 0xFFFFFFFFULL)
-    {
-        n >>= 32; pos += 32;
-    }
-
-    if (n > 0xFFFFULL)
-    {
-        n >>= 16; pos += 16;
-    }
-
-    if (n > 0xFFULL)
-    {
-        n >>= 8; pos += 8;
-    }
-
-    if (n > 0xFULL)
-    {
-        n >>= 4; pos += 4;
-    }
-
-    if (n > 0x3ULL)
-    {
-        n >>= 2; pos += 2;
-    }
-
-    if (n > 0x1ULL)
-    {
-        pos += 1;
-    }
-
-    return pos;
 }
