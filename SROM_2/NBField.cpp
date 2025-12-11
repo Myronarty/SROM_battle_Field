@@ -38,6 +38,7 @@ NBField::NBField(string s)
 NBField NBField::operator+(const NBField& B) const
 {
     NBField C;
+
     for (int i = 0; i < 2; i++)
     {
         C.A[i] = this->A[i] ^ B.A[i];
@@ -54,8 +55,7 @@ NBField& NBField:: operator=(const NBField& B) = default;
 bool NBField::mult_v(int i, const uint64_t u[2], const uint64_t v[2]) const //???
 {
     //mult L * v^T
-    if (i >= 113) i %= 113;
-    int j_0 = i + 1;
+    int j_0 = L[0] + i;
     if (j_0 >= 113) j_0 -= 113;
 
     uint64_t v_[2] = { 0 };
@@ -86,7 +86,10 @@ bool NBField::mult_v(int i, const uint64_t u[2], const uint64_t v[2]) const //??
     for (int j = 0; j < 113; j++)
     {
         int j_ = i + j;
-        if (j_ >= 113) j_ -= 113;
+        if (j_ >= 113)
+        {
+            j_ -= 113;
+        }
         t ^= ((u[j_ >> 6] >> (j_ & 63)) & 1) & (v_[j >> 6] >> (j & 63)) & 1;
     }
     return t;
@@ -96,11 +99,11 @@ NBField NBField::operator*(const NBField& B) const
 {
     NBField C;
 
-    for (int i = 0; i < 113; i++)
+    for (int i = 112; i > -1; i--)
     {
         if (mult_v(i, this->A, B.A))
         {
-            C.A[i >> 6] |= uint64_t(1) << (i % 113);
+            C.A[i / 64] |= (uint64_t(1) << (i % 64));
         }
     }
 
@@ -110,8 +113,8 @@ NBField NBField::operator*(const NBField& B) const
 NBField NBField::pov2() const
 {
     NBField C;
-    C.A[0] = (this->A[0] >> 1) | (this->A[1] << 63);
-    C.A[1] = ((this->A[0] << 48) | (this->A[1] >> 1)) & 0x1FFFFFFFFFFFFULL;
+    C.A[0] = (this->A[0] << 1) | (this->A[1] >> 48);
+    C.A[1] = ((this->A[0] >> 63) | (this->A[1] << 1)) & 0x1FFFFFFFFFFFFULL;
     return C;
 }
 //good
@@ -210,7 +213,7 @@ NBField NBField::rev() const
 
     return B;
 }
-
+//good
 NBField NBField::pov(const NBField& B) const
 {
     NBField C;
